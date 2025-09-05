@@ -13,9 +13,7 @@ titleBtn.addEventListener("click", () => {
 listBtn.addEventListener("click", () => {
     const babyListEl = document.createElement("li");
 
-    let date = new Date();
-    date.toDateString();
-    babyListEl.innerHTML = "I was born on " + date;
+    babyListEl.innerHTML = "Epic test string";
 
     list.appendChild(babyListEl);
 });
