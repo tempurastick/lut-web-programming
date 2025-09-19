@@ -7,8 +7,6 @@ const apiEmploymentUrl =
     "https://pxdata.stat.fi/PxWeb/api/v1/fi/StatFin/tyokay/statfin_tyokay_pxt_115b.px";
 
 addEventListener("DOMContentLoaded", async (e) => {
-    //fetchPopulationData();
-
     // storing the promise response in variables
     const populationJson = await loadLocalFile("./population_query.json");
     const employmentJson = await loadLocalFile("./employment_query.json");
@@ -22,74 +20,14 @@ addEventListener("DOMContentLoaded", async (e) => {
     createTable(populationApiData, employmentApiData);
 });
 
-// the overall function - need to rename this later
-async function fetchPopulationData() {
-    await fetch("./population_query.json")
-        .then((response) => response.json())
-        .then((json) => {
-            // once we fetched the local file, we can trigger the function for the endpoint fetch
-            resolveEndpoint(json);
-        })
-        .catch((error) => console.log(error));
-}
-
-// the little doll inside the overall function
-async function resolveEndpoint(receivingData) {
-    await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(receivingData),
-    })
-        .then((response) => {
-            if (!response.ok) {
-                return response.text().then((text) => {
-                    throw new Error(`HTTP ${response.status}: ${text}`);
-                });
-            }
-            return response.json();
-        })
-        .then((data) => {
-            populateTable(data);
-        })
-        .catch((error) => {
-            console.error("Error details:", error);
-            console.error("Response status:", error.status);
-            console.error("Response text:", error.text);
-        });
-}
-
-// this is where we can start manipulating the dom
-function populateTable(data) {
-    // grabbing all entries from the obj - this is important so we have an index
-    const municipalityList = Object.values(data.dimension.Alue.category.label);
-
-    const values = data.value;
-
-    // now we can iterate through the number of entries in value and grab the corresponding municipality
-    values.forEach((value, index) => {
-        const municipality = municipalityList[index];
-        const tr = document.createElement("tr");
-        const municipalityCell = document.createElement("td");
-        const populationCell = document.createElement("td");
-
-        municipalityCell.innerHTML = municipality;
-        populationCell.innerHTML = value;
-
-        tr.appendChild(municipalityCell);
-        tr.appendChild(populationCell);
-        tableContent.appendChild(tr);
-        //console.log(`Value: ${value}, Label: ${municipality}`);
-    });
-}
-
+// read provided file and get the json
 async function loadLocalFile(file) {
     return fetch(file)
         .then((response) => response.json())
         .catch((error) => console.log(error));
 }
 
+// pass the local json to the external api and get the response
 async function fetchApiData(api, url) {
     return await fetch(api, {
         method: "POST",
@@ -100,6 +38,7 @@ async function fetchApiData(api, url) {
     }).then((response) => response.json());
 }
 
+// now that we have all the data we can use it to create our table rows
 function createTable(population, employment) {
     const municipalityList = Object.values(
         population.dimension.Alue.category.label
@@ -133,10 +72,12 @@ function createTable(population, employment) {
     });
 }
 
+// calculate employment percentage
 function employmentRatio(population, employment) {
     return ((employment / population) * 100).toFixed(2);
 }
 
+// add class depending on employment ratio
 function conditionalStyling(ratio) {
     const percentage = Math.round(ratio);
     if (percentage > 45) {
