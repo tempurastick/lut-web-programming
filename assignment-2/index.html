@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Assignment 2</title>
+        <script src="./script.js" defer></script>
+    </head>
+    <body>
+        <h1>Assignment 2</h1>
+
+        <table>
+            <tr id="tableHeadlines">
+                <th>Username</th>
+                <th>Email</th>
+                <th>Admin</th>
+                <th>User Image</th>
+            </tr>
+            <tbody id="userTable">
+                <tr>
+                    <td data-table="username">Flipper</td>
+                    <td>dolphin@sea.fi</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td data-table="username">Nougat93</td>
+                    <td>tree_tree@gmail.com</td>
+                    <td>x</td>
+                </tr>
+                <tr>
+                    <td data-table="username">xXdarknessXx</td>
+                    <td>xXdarknessXx@aol.de</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <br /><br />
+        <label for="add-user">Add User:</label>
+        <form action="add-user" id="addUser">
+            <label for="input-username">Username</label>
+            <input type="text" name="username" id="input-username" />
+
+            <label for="input-email">Email</label>
+            <input type="text" name="email" id="input-email" />
+            <br />
+
+            <label for="input-admin">Admin</label>
+            <input type="checkbox" name="admin" id="input-admin" />
+            <br />
+
+            <label for="input-image">Upload user image</label>
+            <input type="file" id="input-image" accept="image/*" />
+            <br />
+            <br />
+
+            <button id="submit-data">Submit</button>
+        </form>
+
+        <br />
+        <br />
+        <button id="empty-table">Empty table</button>
+    </body>
+</html>
