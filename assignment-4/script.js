@@ -4,16 +4,16 @@ const API_URL = "https://api.tvmaze.com/search/shows?q=";
 
 const searchForm = document.querySelector("#search-form");
 const searchInput = document.querySelector("#input-show");
-const movieTemplate = document.querySelector("#movieTemplate");
-const movieRoster = document.querySelector(".show-container");
+const showTemplate = document.querySelector("#showTemplate");
+const showRoster = document.querySelector(".show-container");
 
 searchForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    let currentDataList = movieRoster.hasChildNodes();
+    let currentDataList = showRoster.hasChildNodes();
 
     // clear content if applicable
     if (currentDataList) {
-        clearContent(movieRoster);
+        clearContent(showRoster);
     }
 
     // get the current input from the text field
@@ -24,7 +24,7 @@ searchForm.addEventListener("submit", async (e) => {
         const result = await queryDatabase(currentQuery);
 
         // iterating over the list and rendering each item
-        result.map((movie) => renderMovieItem(movie));
+        result.map((show) => rendershowItem(show));
     } catch (error) {
         console.log(error);
     }
@@ -47,28 +47,28 @@ async function queryDatabase(query) {
     return await response.json();
 }
 
-function renderMovieItem(movie) {
-    const title = movie.show.name;
-    const cover = resolveCoverImg(movie.show.image);
+function rendershowItem(show) {
+    const title = show.show.name;
+    const cover = resolveCoverImg(show.show.image);
 
     // clone template from shadow dom
-    const templateClone = movieTemplate.content.cloneNode(true);
+    const templateClone = showTemplate.content.cloneNode(true);
 
     // get all the nodes
     const titleNode = templateClone.querySelector("h1");
     const imgNode = templateClone.querySelector("img");
     const infoNode = templateClone.querySelector(".show-info");
 
-    titleNode.innerHTML = title;
+    titleNode.textContent = title;
     imgNode.src = cover;
 
-    renderDescription(movie.show.summary, infoNode);
+    renderDescription(show.show.summary, infoNode);
 
-    movieRoster.appendChild(templateClone);
+    showRoster.appendChild(templateClone);
 }
 
 function renderDescription(desc, parentNode) {
-    // if movie description is null, don't bother sanitizing and creating a node
+    // if show description is null, don't bother sanitizing and creating a node
     if (!desc) {
         return;
     }
